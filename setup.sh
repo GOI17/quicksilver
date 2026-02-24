@@ -4,30 +4,32 @@ set -e
 
 echo "Setting up Quicksilver Neovim configuration..."
 
-CONFIG_DIR="$HOME/Documents/workspace/personal/quicksilver"
+# Resolve the absolute path of this script, then its parent directory.
+SCRIPT_PATH="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_DIR="$SCRIPT_PATH"
 SYMLINK_DIR="$HOME/.config/quicksilver"
 
 if [ ! -d "$CONFIG_DIR" ]; then
-  echo "Error: Quicksilver config not found at $CONFIG_DIR"
-  exit 1
+	echo "Error: Quicksilver config not found at $CONFIG_DIR"
+	exit 1
 fi
 
 if [ -L "$SYMLINK_DIR" ]; then
-  echo "Symlink already exists at $SYMLINK_DIR"
+	echo "Symlink already exists at $SYMLINK_DIR"
 elif [ -d "$SYMLINK_DIR" ]; then
-  echo "Error: $SYMLINK_DIR already exists as a directory"
-  exit 1
+	echo "Error: $SYMLINK_DIR already exists as a directory"
+	exit 1
 else
-  echo "Creating symlink: $SYMLINK_DIR -> $CONFIG_DIR"
-  ln -s "$CONFIG_DIR" "$SYMLINK_DIR"
+	echo "Creating symlink: $SYMLINK_DIR -> $CONFIG_DIR"
+	ln -s "$CONFIG_DIR" "$SYMLINK_DIR"
 fi
 
 if ! grep -q "alias quicksilver=" "$HOME/.zshrc" 2>/dev/null; then
-  echo "Adding 'quicksilver' alias to ~/.zshrc"
-  echo "alias quicksilver='NVIM_APPNAME=quicksilver nvim'" >> "$HOME/.zshrc"
-  echo "Alias added. Run 'source ~/.zshrc' or restart terminal."
+	echo "Adding 'quicksilver' alias to ~/.zshrc"
+	echo "alias quicksilver='NVIM_APPNAME=quicksilver nvim'" >>"$HOME/.zshrc"
+	echo "Alias added. Run 'source ~/.zshrc' or restart terminal."
 else
-  echo "Alias already exists in ~/.zshrc"
+	echo "Alias already exists in ~/.zshrc"
 fi
 
 echo ""
