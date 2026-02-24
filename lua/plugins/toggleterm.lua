@@ -40,28 +40,38 @@ return {
       end,
     })
 
-    function _G.toggle_opencode()
-      opencode:toggle()
-    end
+    local shell_term = Terminal:new({
+      cmd = vim.o.shell,
+      hidden = true,
+      direction = "vertical",
+      on_open = function()
+        vim.cmd("startinsert!")
+      end,
+    })
 
-    function _G.toggle_terminal_horizontal()
-      opencode.direction = "horizontal"
-      opencode:toggle()
-    end
-
-    function _G.toggle_terminal_vertical()
+    function _G.toggle_opencode_vertical()
       opencode.direction = "vertical"
       opencode:toggle()
     end
 
-    function _G.toggle_terminal_tab()
+    function _G.toggle_opencode_tab()
       opencode.direction = "tab"
       opencode:toggle()
     end
 
-    function _G.toggle_terminal_float()
-      opencode.direction = "float"
-      opencode:toggle()
+    function _G.toggle_shell_vertical()
+      shell_term.direction = "vertical"
+      shell_term:toggle()
+    end
+
+    function _G.toggle_shell_horizontal()
+      shell_term.direction = "horizontal"
+      shell_term:toggle()
+    end
+
+    function _G.toggle_shell_tab()
+      shell_term.direction = "tab"
+      shell_term:toggle()
     end
   end,
 }

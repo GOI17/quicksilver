@@ -58,11 +58,11 @@ vim.keymap.set("n", "<C-w>z", function()
     vim.cmd("wincmd _")
   end
 end, { desc = "Maximize/restore pane" })
-vim.keymap.set("n", "<leader>t", "<cmd>lua toggle_opencode()<CR>", { desc = "Toggle opencode terminal" })
-vim.keymap.set("n", "<leader>th", "<cmd>lua toggle_terminal_horizontal()<CR>", { desc = "Toggle terminal (bottom)" })
-vim.keymap.set("n", "<leader>tv", "<cmd>lua toggle_terminal_vertical()<CR>", { desc = "Toggle terminal (right)" })
-vim.keymap.set("n", "<leader>tf", "<cmd>lua toggle_terminal_float()<CR>", { desc = "Toggle terminal (floating)" })
-vim.keymap.set("n", "<leader>tt", "<cmd>lua toggle_terminal_tab()<CR>", { desc = "Toggle terminal (tab)" })
+vim.keymap.set("n", "<leader>tvo", "<cmd>lua toggle_opencode_vertical()<CR>", { desc = "Opencode terminal (side)" })
+vim.keymap.set("n", "<leader>tto", "<cmd>lua toggle_opencode_tab()<CR>", { desc = "Opencode terminal (tab)" })
+vim.keymap.set("n", "<leader>tv", "<cmd>lua toggle_shell_vertical()<CR>", { desc = "Terminal (side)" })
+vim.keymap.set("n", "<leader>tb", "<cmd>lua toggle_shell_horizontal()<CR>", { desc = "Terminal (bottom)" })
+vim.keymap.set("n", "<leader>tt", "<cmd>lua toggle_shell_tab()<CR>", { desc = "Terminal (tab)" })
 
 local function action_helper()
   local actions = {
