@@ -28,7 +28,7 @@ return {
   },
   config = function(_, opts)
     require("toggleterm").setup(opts)
-    
+
     local Terminal = require("toggleterm.terminal").Terminal
 
     local opencode = Terminal:new({
