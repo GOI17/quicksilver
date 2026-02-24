@@ -12,8 +12,12 @@ vim.opt.termguicolors = true
 vim.opt.timeoutlen = 300
 vim.opt.updatetime = 200
 vim.opt.undofile = true
+vim.opt.autoread = true
 vim.opt.shortmess:append("I")
 
 vim.opt.clipboard = "unnamedplus"
 
 vim.cmd("autocmd BufRead * setlocal wrap tabstop=2")
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  command = "checktime",
+})
