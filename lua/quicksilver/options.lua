@@ -12,6 +12,7 @@ vim.opt.termguicolors = true
 vim.opt.timeoutlen = 300
 vim.opt.updatetime = 200
 vim.opt.undofile = true
+vim.opt.shortmess:append("I")
 
 vim.opt.clipboard = "unnamedplus"
 

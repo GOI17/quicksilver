@@ -4,7 +4,7 @@ set -e
 
 echo "Setting up Quicksilver Neovim configuration..."
 
-CONFIG_DIR="$HOME/Documents/workspace/quicksilver"
+CONFIG_DIR="$HOME/Documents/workspace/personal/quicksilver"
 SYMLINK_DIR="$HOME/.config/quicksilver"
 
 if [ ! -d "$CONFIG_DIR" ]; then
