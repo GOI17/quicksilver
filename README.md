@@ -40,9 +40,12 @@
 | Key | Action |
 |-----|--------|
 | `<C-t>t` | Toggle terminal |
-| `<leader>t` | Toggle opencode terminal |
-| `<leader>th` | Terminal horizontal (bottom) |
+| `<leader>tov` | Opencode terminal (side) |
+| `<leader>tot` | Opencode terminal (tab) |
+| `<leader>tos` | Opencode skill picker (sends /skills) |
+| `<leader>tb` | Terminal horizontal (bottom) |
 | `<leader>tv` | Terminal vertical (right) |
+| `<leader>tt` | Terminal tab |
 | `<C-t>h` | Focus left window |
 | `<C-t>l` | Focus right window |
 

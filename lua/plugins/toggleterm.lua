@@ -40,6 +40,14 @@ return {
       end,
     })
 
+    local opencode_skills = {
+      "Lua expert",
+      "Git expert",
+      "QA",
+      "Software architect",
+      "Vim/Neovim expert",
+    }
+
     local shell_term = Terminal:new({
       cmd = vim.o.shell,
       hidden = true,
@@ -57,6 +65,22 @@ return {
     function _G.toggle_opencode_tab()
       opencode.direction = "tab"
       opencode:toggle()
+    end
+
+    local function ensure_opencode()
+      if not opencode:is_open() then
+        opencode:open()
+      end
+    end
+
+    function _G.opencode_skill_pick()
+      vim.ui.select(opencode_skills, { prompt = "Opencode skill" }, function(choice)
+        if not choice then
+          return
+        end
+        ensure_opencode()
+        opencode:send("/skills " .. choice .. "\n", true)
+      end)
     end
 
     function _G.toggle_shell_vertical()
