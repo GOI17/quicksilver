@@ -2,8 +2,12 @@ vim.g.mapleader = " "
 
 vim.api.nvim_create_user_command("Q", "qa!", {})
 vim.api.nvim_create_user_command("Reload", function()
+  for _, file in ipairs({ "options.lua", "keymaps.lua" }) do
+    local path = vim.fn.stdpath("config") .. "/lua/quicksilver/" .. file
+    pcall(dofile, path)
+  end
   require("lazy").sync({ wait = true })
-  vim.notify("Plugins synced! Restart to fully reload config.", vim.log.levels.INFO)
+  vim.notify("Sourced lua configs. Best to restart Neovim for full reload.", vim.log.levels.WARN)
 end, {})
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
@@ -58,12 +62,6 @@ vim.keymap.set("n", "<C-w>z", function()
     vim.cmd("wincmd _")
   end
 end, { desc = "Maximize/restore pane" })
-vim.keymap.set("n", "<leader>tov", "<cmd>lua toggle_opencode_vertical()<CR>", { desc = "Opencode terminal (side)" })
-vim.keymap.set("n", "<leader>tot", "<cmd>lua toggle_opencode_tab()<CR>", { desc = "Opencode terminal (tab)" })
-vim.keymap.set("n", "<leader>tos", "<cmd>lua opencode_skill_pick()<CR>", { desc = "Opencode skill picker" })
-vim.keymap.set("n", "<leader>tv", "<cmd>lua toggle_shell_vertical()<CR>", { desc = "Terminal (side)" })
-vim.keymap.set("n", "<leader>tb", "<cmd>lua toggle_shell_horizontal()<CR>", { desc = "Terminal (bottom)" })
-vim.keymap.set("n", "<leader>tt", "<cmd>lua toggle_shell_tab()<CR>", { desc = "Terminal (tab)" })
 
 local function action_helper()
   local actions = {

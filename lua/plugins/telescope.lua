@@ -12,13 +12,42 @@ return {
     { "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent files" },
     { "<leader>rc", "<cmd>Commands<cr>", desc = "Run commands" },
   },
-  opts = {},
+  opts = {
+    defaults = {
+      layout_strategy = "horizontal",
+      layout_config = {
+        horizontal = {
+          width = 0.9,
+          height = 0.8,
+          preview_width = 0.6,
+        },
+      },
+      mappings = {
+        i = {
+          ["π"] = function(prompt_bufnr)
+            local action_state = require("telescope.actions.state")
+            local picker = action_state.get_current_picker(prompt_bufnr)
+            picker.layout_config = picker.layout_config or {}
+            if picker.layout_config.preview_width == 0 then
+              picker.layout_config.preview_width = 0.6
+            else
+              picker.layout_config.preview_width = 0
+            end
+            require("telescope.actions").close(prompt_bufnr)
+            require("telescope.builtin").find_files()
+          end,
+        },
+      },
+    },
+  },
   config = function()
     local telescope = require("telescope")
     local actions = require("telescope.actions")
     local pickers = require("telescope.pickers")
     local finders = require("telescope.finders")
     local conf = require("telescope.config").values
+
+    local show_preview = true
 
     local commands_list = {
       { desc = "Rename file", action = function() vim.cmd("Rename ") end },
@@ -65,6 +94,12 @@ return {
 
     vim.api.nvim_create_user_command("Commands", function()
       ext.exports.commands()
+    end, {})
+
+    vim.api.nvim_create_user_command("TelescopePreviewToggle", function()
+      show_preview = not show_preview
+      local msg = show_preview and "Preview enabled" or "Preview disabled"
+      vim.notify(msg, vim.log.levels.INFO)
     end, {})
   end,
 }
