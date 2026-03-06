@@ -6,21 +6,9 @@ return {
   },
   opts = function()
     local function branch_click()
-      local term_ok, term = pcall(require, "toggleterm.terminal")
-      if not term_ok or type(term) ~= "table" or type(term.Terminal) ~= "table" then
-        vim.notify("toggleterm not available", vim.log.levels.WARN)
-        return
-      end
-      local Terminal = term.Terminal
-
-      local lazygit = Terminal:new({
-        cmd = "lazygit",
-        hidden = true,
-        direction = "float",
-        close_on_exit = true,
-      })
-
-      lazygit:toggle()
+      -- Open lazygit in a new terminal buffer
+      vim.cmd("tabnew | terminal lazygit")
+      vim.cmd("startinsert")
     end
 
     local function diagnostics_click()

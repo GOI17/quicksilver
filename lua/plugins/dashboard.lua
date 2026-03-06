@@ -21,7 +21,32 @@ return {
 "       ░██                                                                                      ",
 "        ░██                                                                                     ",
       },
-      shortcut = {},
+      shortcut = {
+        {
+          icon = "󰊢 ",
+          icon_hl = "Title",
+          desc = "LazyGit",
+          key = "g",
+          key_hl = "String",
+          action = "LazyGit",
+        },
+        {
+          icon = "󰒲 ",
+          icon_hl = "Title",
+          desc = "New File",
+          key = "n",
+          key_hl = "String",
+          action = "enew",
+        },
+        {
+          icon = "󰈞 ",
+          icon_hl = "Title",
+          desc = "Find File",
+          key = "f",
+          key_hl = "String",
+          action = "Telescope find_files",
+        },
+      },
     },
   },
 }

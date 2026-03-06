@@ -5,10 +5,25 @@
     "lua/?/init.lua"
   ],
   "diagnostics.globals": ["vim"],
+  "diagnostics.enable": true,
+  "typeCheckingMode": "strict",
   "workspace.library": [
     "${3rd}/luv/library",
     "${3rd}/busted/library",
     "${3rd}/luassert/library"
   ],
-  "workspace.checkThirdParty": false
+  "workspace.checkThirdParty": false,
+  "completion.enable": true,
+  "completion.callSnippet": "Replace",
+  "format.enable": true,
+  "hint.enable": true,
+  "hint.paramType": true,
+  "hint.paramName": "Disable",
+  "hint.returnType": true,
+  "runtime.pluginDir": "plugin",
+  "plugins": {
+    "nvim-lspconfig-types": {
+      "version": "v0.1"
+    }
+  }
 }

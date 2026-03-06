@@ -1,0 +1,32 @@
+schema: spec-driven
+
+# Project context for AI agents
+context: |
+  Tech stack: Lua (LuaJIT), Neovim 0.11+
+  Plugin Manager: lazy.nvim
+  Testing: busted (headless testing)
+  Architecture: Plugin-per-file under lua/plugins/
+  
+  Core modules:
+  - lua/quicksilver/options.lua - Neovim options
+  - lua/quicksilver/keymaps.lua - Keybindings with helper functions
+  
+  Testing pattern:
+  - tests/ directory with manual runner
+  - tests/init.lua - Test helpers
+  - tests/runner.lua - Manual test runner
+  
+  Conventions:
+  - Use pcall for plugin require with error handling
+  - Extract repeated patterns into helper functions
+  - Strict typing enabled in .luarc.json
+  - Keymaps use vim.keymap.set() with desc field
+
+# Per-artifact rules
+rules:
+  proposal:
+    - Keep proposals under 500 words
+    - Always include "Impact on existing functionality"
+  tasks:
+    - Break tasks into chunks testable independently
+    - Include smoke test verification

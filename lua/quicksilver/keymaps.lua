@@ -1,5 +1,72 @@
 vim.g.mapleader = " "
 
+-- ============================================================================
+-- HELPER FUNCTIONS
+-- ============================================================================
+
+-- Lazy-load telescope with error handling
+---@return table|nil, string|nil Returns telescope module or nil, error message
+local function get_telescope()
+  local ok, telescope = pcall(require, "telescope.builtin")
+  if not ok then
+    vim.notify("telescope not available", vim.log.levels.WARN)
+    return nil, "telescope not available"
+  end
+  return telescope, nil
+end
+
+-- Find files and open in specified split mode
+---@param split_cmd string Vim command for split (e.g., "vsplit", "split")
+local function find_files_in_split(split_cmd)
+  local telescope, err = get_telescope()
+  if not telescope then
+    return
+  end
+
+  telescope.find_files({
+    attach_mappings = function(prompt_bufnr, map)
+      local actions = require("telescope.actions")
+      local action_state = require("telescope.actions.state")
+      map("i", "<CR>", function()
+        local selection = action_state.get_selected_entry(prompt_bufnr)
+        actions.close(prompt_bufnr)
+        vim.cmd(split_cmd .. " " .. selection.path)
+      end)
+      return true
+    end,
+  })
+end
+
+-- Grep string under cursor
+local function grep_current_word()
+  local telescope, err = get_telescope()
+  if not telescope then
+    return
+  end
+
+  telescope.grep_string({
+    default_text = vim.fn.expand("<cword>"),
+    word_match = "-w",
+  })
+end
+
+-- Fuzzy search in current buffer
+local function fuzzy_find_buffer()
+  local telescope, err = get_telescope()
+  if not telescope then
+    return
+  end
+
+  telescope.current_buffer_fuzzy_find({
+    default_text = vim.fn.expand("<cword>"),
+    word_match = "-w",
+  })
+end
+
+-- ============================================================================
+-- USER COMMANDS
+-- ============================================================================
+
 vim.api.nvim_create_user_command("Q", "qa!", {})
 vim.api.nvim_create_user_command("Reload", function()
   for _, file in ipairs({ "options.lua", "keymaps.lua" }) do
@@ -9,6 +76,10 @@ vim.api.nvim_create_user_command("Reload", function()
   require("lazy").sync({ wait = true })
   vim.notify("Sourced lua configs. Best to restart Neovim for full reload.", vim.log.levels.WARN)
 end, {})
+
+-- ============================================================================
+-- BASIC KEYMAPS
+-- ============================================================================
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set({ "v", "i" }, "qw", "<Esc>", { desc = "Exit visual/insert mode", nowait = true })
@@ -21,36 +92,26 @@ vim.keymap.set("v", "<", "<gv", { desc = "Decrease indent" })
 vim.keymap.set("v", ">", ">gv", { desc = "Increase indent" })
 vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", { desc = "Save file" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit" })
+
+-- ============================================================================
+-- TELESCOPE KEYMAPS
+-- ============================================================================
+
 vim.keymap.set("n", "<C-w>v", function()
-  local telescope = require("telescope.builtin")
-  telescope.find_files({
-    attach_mappings = function(prompt_bufnr, map)
-      local actions = require("telescope.actions")
-      local action_state = require("telescope.actions.state")
-      map("i", "<CR>", function()
-        local selection = action_state.get_selected_entry(prompt_bufnr)
-        actions.close(prompt_bufnr)
-        vim.cmd("rightbelow vsplit " .. selection.path)
-      end)
-      return true
-    end,
-  })
+  find_files_in_split("rightbelow vsplit")
 end, { desc = "Find files and open in vertical split" })
+
 vim.keymap.set("n", "<C-w>h", function()
-  local telescope = require("telescope.builtin")
-  telescope.find_files({
-    attach_mappings = function(prompt_bufnr, map)
-      local actions = require("telescope.actions")
-      local action_state = require("telescope.actions.state")
-      map("i", "<CR>", function()
-        local selection = action_state.get_selected_entry(prompt_bufnr)
-        actions.close(prompt_bufnr)
-        vim.cmd("rightbelow split " .. selection.path)
-      end)
-      return true
-    end,
-  })
+  find_files_in_split("rightbelow split")
 end, { desc = "Find files and open in horizontal split" })
+
+vim.keymap.set("n", "<leader>fa", grep_current_word, { desc = "Find all (grep word)" })
+vim.keymap.set("n", "<leader>fF", fuzzy_find_buffer, { desc = "Find in current buffer" })
+
+-- ============================================================================
+-- WINDOW MANAGEMENT
+-- ============================================================================
+
 vim.keymap.set("n", "<C-w>z", function()
   local cur_win = vim.api.nvim_get_current_win()
   if vim.t.maximized_win == cur_win then
@@ -63,8 +124,12 @@ vim.keymap.set("n", "<C-w>z", function()
   end
 end, { desc = "Maximize/restore pane" })
 
+-- ============================================================================
+-- ACTION HELPER
+-- ============================================================================
+
 local function action_helper()
-  local actions = {
+  local actions_list = {
     {
       label = "Rename symbol",
       exec = function()
@@ -90,35 +155,15 @@ local function action_helper()
     },
     {
       label = "Find references (git repo)",
-      exec = function()
-        local ok, telescope = pcall(require, "telescope.builtin")
-        if not ok then
-          vim.notify("telescope not available", vim.log.levels.WARN)
-          return
-        end
-        telescope.grep_string({
-          default_text = vim.fn.expand("<cword>"),
-          word_match = "-w",
-        })
-      end,
+      exec = grep_current_word,
     },
     {
       label = "Search in buffer",
-      exec = function()
-        local ok, telescope = pcall(require, "telescope.builtin")
-        if not ok then
-          vim.notify("telescope not available", vim.log.levels.WARN)
-          return
-        end
-        telescope.current_buffer_fuzzy_find({
-          default_text = vim.fn.expand("<cword>"),
-          word_match = "-w",
-        })
-      end,
+      exec = fuzzy_find_buffer,
     },
   }
 
-  vim.ui.select(actions, {
+  vim.ui.select(actions_list, {
     prompt = "Actions",
     format_item = function(item)
       return item.label
@@ -131,23 +176,13 @@ local function action_helper()
 end
 
 vim.keymap.set("n", "<C-.>", action_helper, { desc = "Action helper menu" })
-vim.keymap.set("n", "<leader>fa", function()
-  local ok, telescope = pcall(require, "telescope.builtin")
-  if not ok then
-    vim.notify("telescope not available", vim.log.levels.WARN)
-    return
-  end
-  telescope.grep_string({
-    word_match = "-w",
-  })
-end, { desc = "Find all" })
-vim.keymap.set("n", "<leader>fF", function()
-  local ok, telescope = pcall(require, "telescope.builtin")
-  if not ok then
-    vim.notify("telescope not available", vim.log.levels.WARN)
-    return
-  end
-  telescope.current_buffer_fuzzy_find({
-    word_match = "-w",
-  })
-end, { desc = "Find current buffer" })
+
+-- ============================================================================
+-- GIT TOOLS
+-- ============================================================================
+
+vim.keymap.set("n", "gg", function()
+  -- Open lazygit in a new terminal tab (same as lualine branch click)
+  vim.cmd("tabnew | terminal lazygit")
+  vim.cmd("startinsert")
+end, { desc = "Open LazyGit" })
