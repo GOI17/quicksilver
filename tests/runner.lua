@@ -104,8 +104,8 @@ if not plenary_loaded then
     assert(helpers.find_keymap("n", key) ~= nil)
   end)
   
-  test("should have gg for lazygit", function()
-    local km = helpers.find_keymap("n", "gg")
+  test("should have <space>gg for lazygit", function()
+    local km = helpers.find_keymap("n", "<space>gg")
     assert(km ~= nil, "keymap should exist")
     assert(km.desc == "Open LazyGit", "should have correct description")
   end)
