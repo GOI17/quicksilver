@@ -108,6 +108,39 @@ end, { desc = "Find files and open in horizontal split" })
 vim.keymap.set("n", "<leader>fa", grep_current_word, { desc = "Find all (grep word)" })
 vim.keymap.set("n", "<leader>fF", fuzzy_find_buffer, { desc = "Find in current buffer" })
 
+vim.keymap.set("n", "<A-p>", function()
+  local telescope, err = get_telescope()
+  if not telescope then
+    return
+  end
+  telescope.find_files()
+end, { desc = "Find files (Alt+P)" })
+
+vim.keymap.set("n", "<A-P>", function()
+  local telescope, err = get_telescope()
+  if not telescope then
+    return
+  end
+  telescope.commands()
+end, { desc = "Commands picker (Alt+Shift+P)" })
+
+-- Fallback keymaps (for terminals that don't support Alt modifier)
+vim.keymap.set("n", "<Space>p", function()
+  local telescope, err = get_telescope()
+  if not telescope then
+    return
+  end
+  telescope.find_files()
+end, { desc = "Find files (fallback)" })
+
+vim.keymap.set("n", "<Space>P", function()
+  local telescope, err = get_telescope()
+  if not telescope then
+    return
+  end
+  telescope.commands()
+end, { desc = "Commands picker (fallback)" })
+
 -- ============================================================================
 -- WINDOW MANAGEMENT
 -- ============================================================================
@@ -181,8 +214,85 @@ vim.keymap.set("n", "<C-.>", action_helper, { desc = "Action helper menu" })
 -- GIT TOOLS
 -- ============================================================================
 
-vim.keymap.set("n", "gg", function()
-  -- Open lazygit in a new terminal tab (same as lualine branch click)
-  vim.cmd("tabnew | terminal lazygit")
-  vim.cmd("startinsert")
-end, { desc = "Open LazyGit" })
+vim.keymap.set("n", "<space>gg", require("quicksilver.terminal.keymaps").open_lazygit, { desc = "Open LazyGit" })
+
+-- ============================================================================
+-- TERMINAL KEYMAPS
+-- ============================================================================
+
+require("quicksilver.terminal.keymaps")
+
+vim.keymap.set("n", "<leader>tt", function()
+  require("quicksilver.terminal.keymaps").select()
+end, { desc = "Toggle terminal" })
+
+vim.keymap.set("n", "<leader>ts", function()
+  vim.ui.input({ prompt = "Command to spawn: " }, function(cmd)
+    if cmd and cmd ~= "" then
+      vim.ui.input({ prompt = "Terminal name: " }, function(name)
+        name = name or cmd
+        require("quicksilver.terminal").spawn(name, cmd)
+      end)
+    end
+  end)
+end, { desc = "Spawn terminal" })
+
+vim.keymap.set("n", "<leader>tl", function()
+  local terms = require("quicksilver.terminal").list()
+  local names = vim.tbl_keys(terms)
+  if #names == 0 then
+    vim.notify("No terminals running", vim.log.levels.INFO)
+  else
+    vim.notify("Terminals: " .. table.concat(names, ", "), vim.log.levels.INFO)
+  end
+end, { desc = "List terminals" })
+
+vim.keymap.set("n", "<leader>sl", function()
+  local line = vim.api.nvim_get_current_line()
+  require("quicksilver.terminal.keymaps").select()
+  vim.defer_fn(function()
+    require("quicksilver.terminal").send("main", line .. "\n")
+  end, 100)
+end, { desc = "Send line to terminal" })
+
+vim.keymap.set("n", "<leader>tr", function()
+  local terms = require("quicksilver.terminal").list()
+  local names = vim.tbl_keys(terms)
+  if #names == 0 then
+    vim.notify("No terminals to rename", vim.log.levels.WARN)
+    return
+  end
+  vim.ui.select(names, { prompt = "Select terminal to rename:" }, function(old_name)
+    if old_name then
+      vim.ui.input({ prompt = "New name: " }, function(new_name)
+        if new_name and new_name ~= "" then
+          require("quicksilver.terminal").rename(old_name, new_name)
+        end
+      end)
+    end
+  end)
+end, { desc = "Rename terminal" })
+
+vim.keymap.set("n", "<leader>tc", function()
+  local terms = require("quicksilver.terminal").list()
+  local names = vim.tbl_keys(terms)
+  if #names == 0 then
+    vim.notify("No terminals to close", vim.log.levels.WARN)
+    return
+  end
+  vim.ui.select(names, { prompt = "Select terminal to close:" }, function(name)
+    if name then
+      require("quicksilver.terminal").close(name)
+    end
+  end)
+end, { desc = "Close terminal" })
+
+vim.keymap.set("n", "<leader>th", function()
+  require("quicksilver.terminal").spawn("htop", "htop", { direction = "horizontal" })
+end, { desc = "Open htop" })
+
+vim.keymap.set("n", "<leader>rf", function()
+  require("quicksilver.terminal").spawn("ranger", "ranger", { direction = "horizontal" })
+end, { desc = "Open ranger" })
+
+return M

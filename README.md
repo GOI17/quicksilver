@@ -16,7 +16,7 @@
 - **Fast & Minimal** - Lightweight config with only essential plugins
 - **LSP Support** - Built-in language server support via mason.nvim + nvim-lspconfig
 - **Fuzzy Finding** - Telescope integration for fast file search
-- **Terminal Integration** - ToggleTerm with opencode CLI support
+- **Terminal Integration** - betterTerm with opencode CLI support
 - **File Explorer** - Oil.nvim for modern file navigation
 - **Autocomplete** - nvim-cmp with LSP snippets
 - **Inline Diagnostics** - lspsaga for VSCode-like error display
@@ -62,6 +62,13 @@
 | `<C-w>F` | Find & open in vertical split |
 | `<C-w>s` | Find & open in horizontal split |
 
+### VSCode Style (macOS Cmd)
+
+| Key | Action |
+|-----|--------|
+| `<D>p` | Find files (Cmd+P) |
+| `<D-S>p` | Commands picker (Cmd+Shift+P) |
+
 ### File Explorer
 
 | Key | Action |
@@ -96,7 +103,7 @@ quicksilver
 
 - [lazy.nvim](https://github.com/folke/lazy.nvim) - Plugin manager
 - [oil.nvim](https://github.com/stevearc/oil.nvim) - File explorer
-- [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim) - Terminal
+- [betterTerm](https://github.com/NTBBloodbath/better-term) - Terminal
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) - Fuzzy finder
 - [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) - Autocompletion
 - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig) - LSP

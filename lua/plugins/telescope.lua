@@ -54,7 +54,15 @@ return {
       { desc = "Move file", action = function() vim.cmd("Move ") end },
       { desc = "Format selection", action = function() vim.lsp.buf.format({ range = vim.api.nvim_buf_get_marked(0, "<", ">") }) end },
       { desc = "Format buffer", action = function() vim.lsp.buf.format() end },
-      { desc = "Open terminal", action = function() toggle_opencode() end },
+      { desc = "Open terminal", action = function()
+        local ok, term = pcall(require, "quicksilver.terminal")
+        if ok then
+          term.toggle_opencode()
+        else
+          vim.cmd("terminal")
+          vim.cmd("startinsert")
+        end
+      end },
     }
 
     local function run_command(prompt_bufnr)

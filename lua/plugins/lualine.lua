@@ -6,9 +6,7 @@ return {
   },
   opts = function()
     local function branch_click()
-      -- Open lazygit in a new terminal buffer
-      vim.cmd("tabnew | terminal lazygit")
-      vim.cmd("startinsert")
+      require("quicksilver.terminal.keymaps").open_lazygit()
     end
 
     local function diagnostics_click()

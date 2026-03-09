@@ -24,6 +24,19 @@ else
 	ln -s "$CONFIG_DIR" "$SYMLINK_DIR"
 fi
 
+# Create symlink for WezTerm config
+WEZTERM_SYMLINK="$HOME/.config/wezterm"
+if [ -L "$WEZTERM_SYMLINK" ]; then
+	echo "Symlink already exists at $WEZTERM_SYMLINK"
+elif [ -d "$WEZTERM_SYMLINK" ]; then
+	echo "Error: $WEZTERM_SYMLINK already exists as a directory"
+	exit 1
+else
+	echo "Creating symlink: $WEZTERM_SYMLINK -> $CONFIG_DIR"
+	mkdir -p "$HOME/.config"
+	ln -s "$CONFIG_DIR" "$WEZTERM_SYMLINK"
+fi
+
 if ! grep -q "alias quicksilver=" "$HOME/.zshrc" 2>/dev/null; then
 	echo "Adding 'quicksilver' alias to ~/.zshrc"
 	echo "alias quicksilver='NVIM_APPNAME=quicksilver nvim'" >>"$HOME/.zshrc"
@@ -37,6 +50,7 @@ echo "Setup complete!"
 echo ""
 echo "Next steps:"
 echo "1. Run: source ~/.zshrc"
-echo "2. Run: quicksilver"
-echo "3. Plugins will install automatically"
-echo "4. Run :Mason to install language servers"
+echo "2. Run: quicksilver (Neovim)"
+echo "3. Run: wezterm reload-configuration (after any wezterm.lua changes)"
+echo "4. Plugins will install automatically"
+echo "5. Run :Mason to install language servers"

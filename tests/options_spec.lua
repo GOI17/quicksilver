@@ -99,7 +99,7 @@ describe("options.lua", function()
       require("quicksilver.options")
       assert.equals(200, vim.opt.updatetime:get())
     end)
-  })
+  end)
 
   describe("file options", function()
     it("should enable undofile", function()

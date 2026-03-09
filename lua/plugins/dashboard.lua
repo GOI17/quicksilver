@@ -2,10 +2,12 @@
 local start_time = vim.loop.hrtime()
 
 -- Footer function to display lazy.nvim plugin updates
-local function get_footer()
+-- Wrapped with defer_fn to ensure lazy.nvim is loaded
+local footer_lines = {}
+local function compute_footer()
   local ok, lazy_status = pcall(require, "lazy.status")
   if not ok then
-    return { "  lazy.nvim not available" }
+    return
   end
 
   -- lazy_status.updates is a function that returns string like "5 updates"
@@ -24,16 +26,21 @@ local function get_footer()
 
   local elapsed = (vim.loop.hrtime() - start_time) / 1e6
 
-  local lines = {}
   if updates and updates > 0 then
-    table.insert(lines, string.format("  󰋖 %d plugins to update", updates))
+    table.insert(footer_lines, string.format("  󰋖 %d plugins to update", updates))
   else
-    table.insert(lines, "  󰋖 All plugins up to date")
+    table.insert(footer_lines, "  󰋖 All plugins up to date")
   end
-  table.insert(lines, string.format("  󰒲 Started in %.2fms", elapsed))
-  table.insert(lines, string.format("  󰐢 %d plugins loaded", plugins_count))
+  table.insert(footer_lines, string.format("  󰒲 Started in %.2fms", elapsed))
+  table.insert(footer_lines, string.format("  󰐢 %d plugins loaded", plugins_count))
+end
 
-  return lines
+-- Defer footer computation to ensure lazy.nvim has loaded
+vim.defer_fn(compute_footer, 100)
+
+-- Footer getter called by dashboard
+local function get_footer()
+  return footer_lines
 end
 
 return {
@@ -65,9 +72,11 @@ return {
           icon = "󰊢 ",
           icon_hl = "Title",
           desc = "LazyGit",
-          key = "g",
+          key = "l",
           key_hl = "String",
-          action = "Lazygit",
+          action = function()
+            require("quicksilver.terminal.keymaps").open_lazygit()
+          end,
         },
         {
           icon = "󰒲 ",
