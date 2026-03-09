@@ -1,53 +1,41 @@
-local M = {}
+local terminal = require("quicksilver.terminal")
 
-local function get_terminal()
-  local ok, term = pcall(require, "quicksilver.terminal")
-  if not ok then
-    vim.notify("terminal module not available", vim.log.levels.ERROR)
-    return nil
+vim.keymap.set("n", "<space>gg", terminal.open_lazygit, { desc = "Open LazyGit" })
+
+vim.keymap.set({ "n", "t" }, "<C-t>", function()
+  local term = terminal.get_terminal()
+  if term and term.toggle_termwindow then
+    term.toggle_termwindow()
   end
-  return term
-end
+end, { desc = "Toggle betterterm visibility" })
 
-function M.toggle(name)
-  local term = get_terminal()
-  if term then
-    term.toggle(name)
+vim.keymap.set("t", "<C-u>", function()
+  local term = terminal.get_terminal()
+  if term and term.cycle then
+    term.cycle(1)
   end
-end
+end, { desc = "Cycle terminals to the right" })
 
-function M.list()
-  local term = get_terminal()
-  if term then
-    return term.list()
+vim.keymap.set("t", "<C-y>", function()
+  local term = terminal.get_terminal()
+  if term and term.cycle then
+    term.cycle(-1)
   end
-  return {}
-end
+end, { desc = "Cycle terminals to the left" })
 
-function M.send(name, cmd)
-  local term = get_terminal()
-  if term then
-    term.send(name, cmd)
-  end
-end
+vim.keymap.set("t", "<C-d>", function()
+  local current = vim.api.nvim_get_current_buf()
+  vim.api.nvim_buf_delete(current, { force = true })
+end, { desc = "Close active terminal" })
 
-function M.select()
-  local term = get_terminal()
-  if term then
-    term.select()
-  end
-end
+-- ============================================================================
+-- Terminal Management Keymaps
+-- ============================================================================
 
-function M.spawn(name, cmd, opts)
-  local term = get_terminal()
-  if term then
-    term.spawn(name, cmd, opts)
-  end
-end
-
-function M.open_lazygit()
-  vim.cmd("tabnew | terminal lazygit")
-  vim.cmd("startinsert")
-end
-
-return M
+vim.keymap.set("n", "<leader>tn", terminal.spawn_terminal, { desc = "Spawn new terminal" })
+vim.keymap.set("n", "<leader>tl", terminal.list_terminals, { desc = "List terminals" })
+vim.keymap.set("n", "<leader>to", terminal.toggle_opencode, { desc = "Toggle opencode terminal" })
+vim.keymap.set("n", "<leader>tv", terminal.toggle_shell_vertical, { desc = "Toggle shell vertical" })
+vim.keymap.set("n", "<leader>th", terminal.toggle_shell_horizontal, { desc = "Toggle shell horizontal" })
+vim.keymap.set("n", "<leader>tt", terminal.toggle_shell_tab, { desc = "Toggle shell in tab" })
+vim.keymap.set("n", "<leader>tg", terminal.open_lazygit, { desc = "Toggle LazyGit" })

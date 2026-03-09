@@ -39,15 +39,19 @@
 
 | Key | Action |
 |-----|--------|
-| `<C-t>t` | Toggle terminal |
-| `<leader>tov` | Opencode terminal (side) |
-| `<leader>tot` | Opencode terminal (tab) |
-| `<leader>tos` | Opencode skill picker (sends /skills) |
-| `<leader>tb` | Terminal horizontal (bottom) |
-| `<leader>tv` | Terminal vertical (right) |
-| `<leader>tt` | Terminal tab |
-| `<C-t>h` | Focus left window |
-| `<C-t>l` | Focus right window |
+| `<leader>tn` | Spawn new terminal |
+| `<leader>tl` | List all terminals |
+| `<leader>to` | Toggle opencode terminal (vertical) |
+| `<leader>tv` | Toggle shell vertical |
+| `<leader>th` | Toggle shell horizontal |
+| `<leader>tt` | Toggle shell in new tab |
+| `<leader>tg` | Toggle LazyGit |
+| `<space>gg` | Open LazyGit (alternative) |
+| `<C-t>` | Toggle betterterm visibility |
+| `<C-t>n` | New terminal tab (betterterm) |
+| `<C-u>` | Cycle terminals right (in terminal) |
+| `<C-y>` | Cycle terminals left (in terminal) |
+| `<C-d>` | Close terminal (in terminal) |
 
 ### Telescope
 
@@ -116,6 +120,44 @@ quicksilver
 ## License
 
 MIT License - See [LICENSE](LICENSE) for details.
+
+## Testing
+
+This project uses [busted](https://github.com/nvim-neotest/busted) for testing Neovim Lua code.
+
+### Run Tests
+
+```bash
+# From within Neovim
+:PlenaryBustedDirectory tests/ {minimal_init = 'tests/minimal_init.lua'}
+
+# Or using busted directly
+busted tests/
+```
+
+### Test Structure
+
+- `tests/` - Test files following `*_spec.lua` naming convention
+- `tests/minimal_init.lua` - Minimal Neovim init for headless testing
+- `tests/init.lua` - Test helpers and utilities
+
+### Adding Tests
+
+1. Create a new file in `tests/` with `_spec.lua` suffix
+2. Follow the pattern of existing tests:
+
+```lua
+describe("module_name", function()
+  before_each(function()
+    package.loaded["quicksilver.module_name"] = nil
+  end)
+
+  it("should do something", function()
+    require("quicksilver.module_name")
+    -- assertions here
+  end)
+end)
+```
 
 ---
 
