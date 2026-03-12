@@ -6,7 +6,7 @@ return {
   },
   opts = function()
     local function branch_click()
-      require("quicksilver.terminal.keymaps").open_lazygit()
+      require("quicksilver.terminal").open_lazygit()
     end
 
     local function diagnostics_click()
