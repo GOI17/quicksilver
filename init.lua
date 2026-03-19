@@ -13,6 +13,9 @@ vim.opt.rtp:prepend(lazypath)
 
 require("quicksilver.options")
 require("quicksilver.keymaps")
+require("quicksilver.commands")
+
+require("quicksilver.ui.topbar").setup()
 
 require("lazy").setup({
   spec = { import = "plugins" },

@@ -1,4 +1,10 @@
-local terminal = require("quicksilver.terminal")
+local terminal = require("quicksilver.terminal.options")
+local M = {}
+
+-- Setup winbar and autocmds for terminal buffers
+terminal.setup()
+
+M.get_new_tab_keymap = "<A-n>"
 
 vim.keymap.set("n", "<space>gg", terminal.open_lazygit, { desc = "Open LazyGit" })
 
@@ -28,14 +34,4 @@ vim.keymap.set("t", "<C-d>", function()
   vim.api.nvim_buf_delete(current, { force = true })
 end, { desc = "Close active terminal" })
 
--- ============================================================================
--- Terminal Management Keymaps
--- ============================================================================
-
-vim.keymap.set("n", "<leader>tn", terminal.spawn_terminal, { desc = "Spawn new terminal" })
-vim.keymap.set("n", "<leader>tl", terminal.list_terminals, { desc = "List terminals" })
-vim.keymap.set("n", "<leader>to", terminal.toggle_opencode, { desc = "Toggle opencode terminal" })
-vim.keymap.set("n", "<leader>tv", terminal.toggle_shell_vertical, { desc = "Toggle shell vertical" })
-vim.keymap.set("n", "<leader>th", terminal.toggle_shell_horizontal, { desc = "Toggle shell horizontal" })
-vim.keymap.set("n", "<leader>tt", terminal.toggle_shell_tab, { desc = "Toggle shell in tab" })
-vim.keymap.set("n", "<leader>tg", terminal.open_lazygit, { desc = "Toggle LazyGit" })
+return M

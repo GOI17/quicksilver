@@ -6,8 +6,8 @@ describe("terminal.lua", function()
 
   before_each(function()
     -- Reset terminal module state
-    package.loaded["quicksilver.terminal"] = nil
-    terminal = require("quicksilver.terminal")
+    package.loaded["quicksilver.terminal.options"] = nil
+    terminal = require("quicksilver.terminal.options")
   end)
 
   describe("terminal registry", function()

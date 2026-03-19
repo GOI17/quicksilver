@@ -12,7 +12,7 @@ return {
     start_inserted = true,
     show_tabs = true,
     index_base = 0,
-    new_tab_mapping = "<C-n>",
+    new_tab_mapping = require("quicksilver.terminal.keymaps").get_new_tab_keymap,
     predefined = {},
   },
 }

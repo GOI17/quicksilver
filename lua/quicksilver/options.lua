@@ -17,6 +17,8 @@ vim.opt.shortmess:append("I")
 
 vim.opt.clipboard = "unnamedplus"
 
+vim.g.topbar_visible = false  -- Disabled by default due to E5108 error
+
 vim.cmd("autocmd BufRead * setlocal wrap tabstop=2")
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
   command = "checktime",

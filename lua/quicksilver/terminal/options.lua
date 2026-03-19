@@ -1,11 +1,5 @@
 local M = {}
 
----@class TerminalConfig
----@field name string Terminal name (unique identifier)
----@field cmd string Command to execute
----@field direction "horizontal"|"vertical"|"float" Window direction
----@field size number Window size (height or width depending on direction)
-
 ---@class MTerminal
 ---@field name string
 ---@field cmd string
@@ -13,7 +7,6 @@ local M = {}
 ---@field bufnr number|nil
 ---@field winnr number|nil
 ---@field tabnr number|nil
-
 -- ============================================================================
 -- Terminal Registry
 -- ============================================================================
@@ -313,7 +306,46 @@ function M.open_lazygit()
   vim.cmd("startinsert")
 end
 
+-- ============================================================================
+-- Fullscreen Toggle
+-- ============================================================================
+
+---Toggle fullscreen for current terminal window
+function M.toggle_fullscreen()
+  local ok, winbar = pcall(require, "quicksilver.terminal.winbar")
+  if ok and winbar and winbar.toggle_fullscreen then
+    winbar.toggle_fullscreen()
+  else
+    -- Fallback: inline implementation
+    local cur_win = vim.api.nvim_get_current_win()
+    local is_maximized = vim.t.maximized_win == cur_win
+    
+    if is_maximized then
+      vim.cmd("wincmd =")
+      vim.t.maximized_win = nil
+      vim.notify("Terminal restored", vim.log.levels.INFO)
+    else
+      vim.t.maximized_win = cur_win
+      vim.cmd("wincmd |")
+      vim.cmd("wincmd _")
+      vim.notify("Terminal maximized", vim.log.levels.INFO)
+    end
+  end
+end
+
 -- Expose get_terminal for backward compatibility
 M.get_terminal = get_terminal
+
+-- Expose winbar for terminal
+M.winbar = nil
+
+---Setup terminal module including winbar
+function M.setup()
+  local ok, winbar = pcall(require, "quicksilver.terminal.winbar")
+  if ok then
+    winbar.setup()
+    M.winbar = winbar
+  end
+end
 
 return M

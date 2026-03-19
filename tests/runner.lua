@@ -21,7 +21,7 @@ if not plenary_loaded then
   -- Load the modules we want to test
   require("quicksilver.options")
   require("quicksilver.keymaps")
-  require("quicksilver.terminal")
+  require("quicksilver.terminal.options")
   require("quicksilver.terminal.keymaps")
   
   local helpers = _G.test_helpers
@@ -178,7 +178,7 @@ if not plenary_loaded then
   
   print("\n=== Running terminal tests ===")
   
-  local terminal = require("quicksilver.terminal")
+  local terminal = require("quicksilver.terminal.options")
   local assert = assert  -- Use built-in assert
   
   test("get_terminals should return table", function()
