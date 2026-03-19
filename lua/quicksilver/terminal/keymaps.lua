@@ -7,6 +7,7 @@ terminal.setup()
 M.get_new_tab_keymap = "<A-n>"
 
 vim.keymap.set("n", "<space>gg", terminal.open_lazygit, { desc = "Open LazyGit" })
+vim.keymap.set("n", "<leader>tz", terminal.toggle_fullscreen, { desc = "Toggle terminal fullscreen" })
 
 vim.keymap.set({ "n", "t" }, "<C-t>", function()
   local term = terminal.get_terminal()
