@@ -17,24 +17,23 @@ return {
     end,
     config = function()
       local ai_config = require("quicksilver.ai-config")
-      local cmp = require("cmp")
-      
+
       -- Configure cmp-ai based on active provider
       local active_provider = ai_config.get_active_provider()
       if active_provider == nil then
         return
       end
-      
+
       local provider_config = ai_config.get_provider_config(active_provider)
       local notification_config = ai_config.get_notification_config()
-      
+
       -- Base cmp-ai configuration
       local cmp_ai_config = {
         max_lines = provider_config.max_lines,
         notify = notification_config.on_start and notification_config.on_complete,
         -- Additional provider-specific configuration will be set below
       }
-      
+
       if active_provider == "ollama" then
         cmp_ai_config.ext_config = {
           [provider_config.host] = {
@@ -52,7 +51,7 @@ return {
           }
         }
       end
-      
+
       -- Apply the configuration
       require("cmp_ai").setup(cmp_ai_config)
     end,
@@ -69,16 +68,8 @@ return {
     config = function()
       local ai_config = require("quicksilver.ai-config")
       local notification_config = ai_config.get_notification_config()
-      
+
       require("copilot").setup({
-        suggestion = {
-          enabled = false, -- Disable built-in suggestion, we use cmp source
-          auto_trigger = false,
-          debounce = 75,
-        },
-        panel = {
-          enabled = false, -- Disable built-in panel, we use cmp source
-        },
         filetypes = {
           yaml = false,
           markdown = false,

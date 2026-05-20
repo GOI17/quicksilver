@@ -232,6 +232,11 @@ table.insert(config.hyperlink_rules, {
 -- ============================================
 
 config.keys = {
+	{
+	  key = 'Enter',
+	  mods = 'SHIFT',
+	  action = wezterm.action.SendString '\x1b[13;2u',
+	}
 }
 
 -- Mouse key bindings

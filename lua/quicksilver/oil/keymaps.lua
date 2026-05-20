@@ -21,6 +21,6 @@ function M.get_global_oil_keymaps()
   }
 end
 
-vim.keymap.set("n", "<C-S-e>", "<CMD>Oil<CR>", { desc = "Open file explorer" })
+vim.keymap.set("n", "<C-e>", "<CMD>Oil<CR>", { desc = "Open file explorer" })
 
 return M
