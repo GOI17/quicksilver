@@ -14,6 +14,8 @@ return {
           preview_width = 0.6,
         },
       },
+      path_display = { "shorten" },
+      previewer = false,
     },
   },
 }

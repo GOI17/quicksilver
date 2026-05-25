@@ -1,25 +1,8 @@
 local M = {}
 
--- Lazy-load telescope with error handling
----@return table|nil, string|nil Returns telescope module or nil, error message
-function M.get_telescope()
-  local ok, telescope = pcall(require, "telescope.builtin")
-  if not ok then
-    vim.notify("telescope not available", vim.log.levels.WARN)
-    return nil, "telescope not available"
-  end
-  return telescope, nil
-end
-
--- Find files and open in specified split mode
----@param split_cmd string Vim command for split (e.g., "vsplit", "split")
 function M.find_files_in_split(split_cmd)
-  local telescope, err = M.get_telescope()
-  if not telescope then
-    return
-  end
-
-  telescope.find_files({
+  local custom = require("quicksilver.telescope.custom_pickers")
+  custom.find_files({
     attach_mappings = function(prompt_bufnr, map)
       local actions = require("telescope.actions")
       local action_state = require("telescope.actions.state")
