@@ -1,5 +1,21 @@
 local M = {}
 
+local topbar_winbar = "%@v:lua.require('quicksilver.ui.topbar').open_telescope@Search files%*"
+
+local function is_terminal_buffer(bufnr)
+  bufnr = bufnr or 0
+
+  local filetype = vim.bo[bufnr].filetype
+  local buftype = vim.bo[bufnr].buftype
+  local buf_name = vim.api.nvim_buf_get_name(bufnr)
+
+  return buftype == "terminal"
+    or filetype == "terminal"
+    or filetype == "toggleterm"
+    or filetype == "better_term"
+    or buf_name:match("^term://") ~= nil
+end
+
 -- ============================================================================
 -- Winbar Generation
 -- ============================================================================
@@ -10,9 +26,8 @@ function M.get_winbar()
     return nil
   end
 
-  -- Guard: skip terminal buffers
-  local buf_ft = vim.bo.filetype
-  if buf_ft == "terminal" or buf_ft == "toggleterm" then
+  -- Guard: skip terminal buffers and plugin-managed terminal winbars.
+  if is_terminal_buffer() then
     return nil
   end
 
@@ -22,8 +37,7 @@ function M.get_winbar()
     return nil
   end
 
-  local search_click = "%@v:lua.require('quicksilver.ui.topbar').open_telescope@Search files%*"
-  return search_click
+  return topbar_winbar
 end
 
 -- ============================================================================
@@ -81,7 +95,11 @@ function M.setup()
 
   vim.api.nvim_create_autocmd({ "WinLeave" }, {
     callback = function()
-      pcall(function() vim.wo.winbar = nil end)
+      pcall(function()
+        if vim.wo.winbar == topbar_winbar then
+          vim.wo.winbar = nil
+        end
+      end)
     end,
     desc = "Clear topbar winbar on leave",
   })
