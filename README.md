@@ -81,6 +81,35 @@
 
 ## Installation
 
+### Homebrew
+
+```bash
+brew tap GOI17/quicksilver
+brew install GOI17/quicksilver/quicksilver
+quicksilver --version
+quicksilver
+```
+
+Use the fully qualified formula name to distinguish this Neovim configuration
+from the unrelated Quicksilver macOS application in Homebrew. Git, Neovim, and
+ripgrep are installed as dependencies. Plugins install on the first launch;
+run `:Mason` inside Quicksilver to install language servers.
+
+```bash
+brew upgrade GOI17/quicksilver/quicksilver
+brew uninstall GOI17/quicksilver/quicksilver
+```
+
+Homebrew loads the bundled configuration directly. Your shell configuration,
+existing `~/.config/quicksilver`, and WezTerm configuration are not modified.
+If you previously ran `setup.sh`, remove its `alias quicksilver=...` line from
+`~/.zshrc` and run `unalias quicksilver` in the current shell so the Homebrew
+executable is used. Plugin and user data are retained when uninstalling.
+
+See [Homebrew distribution](homebrew/README.md) for packaging and release steps.
+
+### From source
+
 ```bash
 # Clone the repository
 git clone https://github.com/GOI17/quicksilver.git ~/Documents/workspace/quicksilver
@@ -88,6 +117,7 @@ git clone https://github.com/GOI17/quicksilver.git ~/Documents/workspace/quicksi
 # Run setup
 cd ~/Documents/workspace/quicksilver
 ./setup.sh
+source ~/.zshrc
 
 # Start Neovim
 quicksilver
@@ -122,6 +152,12 @@ quicksilver
 MIT License - See [LICENSE](LICENSE) for details.
 
 ## Testing
+
+Distribution tests run without downloading plugins or changing user configuration:
+
+```bash
+python3 -m unittest discover -s tests -p 'distribution_spec.py' -v
+```
 
 This project uses [busted](https://github.com/nvim-neotest/busted) for testing Neovim Lua code.
 

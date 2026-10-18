@@ -1,7 +1,8 @@
 vim.api.nvim_create_user_command("Q", "qa!", {})
 vim.api.nvim_create_user_command("Reload", function()
   for _, file in ipairs({ "options.lua", "keymaps.lua" }) do
-    local path = vim.fn.stdpath("config") .. "/lua/quicksilver/" .. file
+    local config_dir = vim.g.quicksilver_config_dir or vim.fn.stdpath("config")
+    local path = config_dir .. "/lua/quicksilver/" .. file
     pcall(dofile, path)
   end
   require("lazy").sync({ wait = true })
