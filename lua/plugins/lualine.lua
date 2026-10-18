@@ -5,6 +5,11 @@ return {
     "nvim-tree/nvim-web-devicons",
   },
   opts = function()
+    local terminal_hints = require("quicksilver.terminal.hints")
+    local function is_editor()
+      return not terminal_hints.is_terminal()
+    end
+
     local function branch_click()
       require("quicksilver.terminal.options").open_lazygit()
     end
@@ -33,6 +38,7 @@ return {
 
     local diagnostics = {
       "diagnostics",
+      cond = is_editor,
       sources = { "nvim_diagnostic" },
       sections = { "error", "warn" },
       symbols = { error = " ", warn = " " },
@@ -48,6 +54,7 @@ return {
 
     local branch = {
       "branch",
+      cond = is_editor,
       on_click = branch_click,
     }
 
@@ -60,6 +67,7 @@ return {
 
     local filetype = {
       treesitter_lang,
+      cond = is_editor,
       icon_only = false,
     }
 
@@ -73,10 +81,13 @@ return {
       sections = {
         lualine_a = { mode },
         lualine_b = { branch },
-        lualine_c = { "filename" },
+        lualine_c = {
+          { "filename", cond = is_editor },
+          { terminal_hints.get, cond = terminal_hints.is_terminal },
+        },
         lualine_x = { diagnostics },
         lualine_y = { filetype },
-        lualine_z = { "location" },
+        lualine_z = { { "location", cond = is_editor } },
       },
     }
   end,

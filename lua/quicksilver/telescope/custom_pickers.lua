@@ -103,6 +103,11 @@ local function wrap_picker(picker_name)
       if custom_attach then
         custom_attach(prompt_bufnr, map)
       end
+      require("quicksilver.telescope.hints").attach(prompt_bufnr, {
+        picker = picker_name,
+        state = M.state,
+        select_label = opts.select_hint,
+      })
       return true
     end
     require("telescope.builtin")[picker_name](opts)

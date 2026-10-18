@@ -10,6 +10,10 @@ local M = {}
 ---Check if current buffer is a terminal
 ---@return boolean
 local function is_terminal_buffer()
+  if vim.bo.buftype == "terminal" then
+    return true
+  end
+
   local buf_ft = vim.bo.filetype
   local buf_name = vim.fn.expand("%:t")
   
@@ -64,11 +68,9 @@ function M.get_winbar()
   end
   
   local icon = get_zoom_icon()
-  local cmd = "lua vim.cmd('lua require(\"quicksilver.terminal\").toggle_fullscreen()')"
-  
   -- Build winbar with clickable icon on the right side
   -- %@ makes the icon clickable, calling the function on click
-  return "%=%@" .. cmd .. "%" .. icon .. "%"
+  return "%=%@v:lua.require'quicksilver.terminal.winbar'.toggle_fullscreen@" .. icon .. "%X"
 end
 
 -- ============================================================================
@@ -108,7 +110,7 @@ end
 ---Setup autocmd to activate winbar on terminal buffers
 function M.setup()
   -- Set winbar for terminal buffers
-  vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+  vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter", "BufWinEnter" }, {
     pattern = "term://*",
     callback = function(args)
       local win = vim.api.nvim_get_current_win()

@@ -17,5 +17,13 @@ return {
       path_display = { "shorten" },
       previewer = false,
     },
+    pickers = {
+      commands = {
+        attach_mappings = function(prompt_bufnr)
+          require("quicksilver.telescope.hints").attach(prompt_bufnr, { picker = "commands" })
+          return true
+        end,
+      },
+    },
   },
 }

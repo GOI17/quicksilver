@@ -38,7 +38,7 @@ function M.open_telescope()
     return
   end
 
-  local telescope = require("telescope.builtin")
+  local telescope = require("quicksilver.telescope.custom_pickers")
   telescope.find_files()
 end
 
